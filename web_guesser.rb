@@ -3,13 +3,12 @@ require 'sinatra/reloader'
 require 'pry'
 
 number = rand(0..100)
-message = "Guess a number"
 
 get '/' do
   guess = params["guess"].to_i
-
   message = check_guess(guess, number)
-  erb :index, :locals => {:number => number, :message => message}
+  color = check_color(message)
+  erb :index, :locals => {:number => number, :message => message, :color => color}
 end
 
 def check_guess(guess, number)
@@ -26,7 +25,7 @@ def too_high(guess, number)
   if guess > number && (guess - 5) > number
     "Way too high!"
   else
-    "Too High!"
+    "Too high!"
   end
 end
 
@@ -35,5 +34,15 @@ def too_low(guess, number)
     "Way too low!"
   else
     "Too low!"
+  end
+end
+
+def check_color(message)
+  if message == "Way too low!" || message == "Way too high!"
+    'red'
+  elsif message == "Too low!" || message == "Too high!"
+    'orange'
+  elsif message == "You got it right!"
+    'green'
   end
 end
